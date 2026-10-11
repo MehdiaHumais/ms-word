@@ -1,0 +1,20 @@
+# Dependencies
+/node_modules
+
+# Build output
+/dist
+/src-tauri/target
+/src-tauri/gen/schemas
+
+# Local dev server logs
+.dev-server*.log
+*.log
+
+# Downloaded local tooling (not source)
+/vs_buildtools.exe
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

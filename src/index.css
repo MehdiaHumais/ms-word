@@ -1,0 +1,477 @@
+@import "tailwindcss";
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  overscroll-behavior: none;
+}
+
+/* ---------- Editor content (Word-like page typography) ---------- */
+
+.brit-content {
+  font-family: Calibri, "Segoe UI", sans-serif;
+  color: #111;
+  caret-color: #111;
+}
+
+.brit-content p {
+  margin: 0 0 8px;
+  line-height: 1.4;
+}
+
+.brit-content h1 {
+  font-size: 2em;
+  margin: 0.67em 0 0.4em;
+  font-weight: 600;
+  color: #1f3355;
+}
+
+.brit-content h2 {
+  font-size: 1.5em;
+  margin: 0.83em 0 0.4em;
+  font-weight: 600;
+  color: #1f3355;
+}
+
+.brit-content h3 {
+  font-size: 1.25em;
+  margin: 1em 0 0.4em;
+  font-weight: 600;
+  color: #1f3355;
+}
+
+.brit-content ul,
+.brit-content ol {
+  margin: 0 0 8px;
+  padding-left: 1.5em;
+}
+
+/* Tailwind's preflight resets list-style to none — restore the markers so
+   bulleted/numbered lists actually show their bullets and numbers. */
+.brit-content ul {
+  list-style-type: disc;
+  list-style-position: outside;
+}
+
+.brit-content ol {
+  list-style-type: decimal;
+  list-style-position: outside;
+}
+
+/* The HTML `type` attribute on <ol> is case-insensitively matched by CSS
+   attribute selectors, so [type="a"] and [type="A"] would both apply.
+   Ordered-list marker styles are therefore emitted as inline styles. */
+
+.brit-content ul ul {
+  list-style-type: circle;
+}
+
+.brit-content ol ol {
+  list-style-type: lower-alpha;
+}
+
+.brit-content li {
+  margin-bottom: 2px;
+}
+
+/* Find & Replace — highlighted search matches (Word-style). */
+.brit-find-match {
+  background-color: #ffff00;
+  color: inherit;
+  border-radius: 2px;
+}
+
+.brit-find-match-current {
+  background-color: #ff9632;
+  color: inherit;
+  border-radius: 2px;
+}
+
+.brit-content blockquote {
+  border-left: 3px solid #bbb;
+  margin: 0 0 8px;
+  padding-left: 1em;
+  color: #444;
+  font-style: italic;
+}
+
+.brit-content img {
+  max-width: 100%;
+  height: auto;
+  cursor: default;
+}
+
+.brit-content a {
+  color: #0563c1;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.brit-content hr {
+  border: none;
+  border-top: 1px solid #999;
+  margin: 12px 0;
+}
+
+.brit-content code {
+  font-family: Consolas, monospace;
+  font-size: 0.9em;
+  background: #f4f4f4;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  padding: 0 3px;
+}
+
+.brit-content mark {
+  border-radius: 2px;
+}
+
+/* Page break marker */
+.brit-page-break {
+  border-top: 2px dashed #c9c9c9;
+  text-align: center;
+  font-size: 12px;
+  color: #b0b0b0;
+  padding: 8px 0 4px;
+  margin: 8px 0;
+  user-select: none;
+  cursor: default;
+}
+
+/* Bare ProseMirror paragraph markers (empty nodes) */
+.brit-content p.is-editor-empty:first-child::before {
+  content: "Start typing\u2026 (or use the ribbon above)";
+  float: left;
+  color: #b6b6b6;
+  pointer-events: none;
+  height: 0;
+  font-style: italic;
+}
+
+/* Selected image outline */
+.ProseMirror-selectednode {
+  outline: 2px solid #4a90d9;
+  outline-offset: 1px;
+}
+
+/* Placeholder paragraphs inside tables/cells keep minimum size */
+.brit-content td p:empty::after {
+  content: "\200b";
+}
+
+.brit-content table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 0 0 8px;
+}
+
+.brit-content th {
+  border: 1px solid #888;
+  background: #f0f4f9;
+  font-weight: 600;
+  padding: 6px 8px;
+  vertical-align: top;
+}
+
+.brit-content td {
+  border: 1px solid #888;
+  padding: 6px 8px;
+  vertical-align: top;
+}
+
+.brit-content tr {
+  cursor: default;
+}
+
+/* Drop Cap — floated large initial letter */
+.brit-dropcap {
+  float: left;
+  font-size: 3em;
+  line-height: 0.85;
+  padding: 0.08em 0.12em 0 0;
+  font-family: Georgia, serif;
+  color: #1f3355;
+  font-weight: 600;
+}
+
+/* Page Number — auto-updating field */
+.brit-page-number {
+  display: inline-block;
+  background: #f0f4f9;
+  border: 1px solid #c1d3ec;
+  border-radius: 2px;
+  padding: 0.05em 0.35em;
+  font-family: Consolas, monospace;
+  font-size: 12px;
+  color: #1f4e79;
+  font-weight: 600;
+}
+
+/* Text Box — bordered, resizable text area */
+.brit-text-box {
+  border: 1px solid #9dc3e6;
+  padding: 6px 8px;
+  margin: 4px 0;
+  min-height: 32px;
+  border-radius: 2px;
+}
+
+/* Equation — centered math line */
+.brit-equation {
+  border: 1px solid #ccc;
+  border-left: 3px solid #4472c4;
+  background: #f8fafc;
+  text-align: center;
+  font-style: italic;
+  font-size: 18px;
+  padding: 6px 12px;
+  margin: 8px 0;
+  border-radius: 3px;
+}
+
+/* WordArt — gradient text fills */
+.brit-word-art-rainbow {
+  background: linear-gradient(to right, #d1495b, #e8a444, #e8c749, #4472c4, #7b61a5);
+  background-clip: text;
+  color: transparent;
+}
+
+.brit-word-art-blue {
+  background: linear-gradient(to right, #1f4e79, #4472c4, #9dc3e6);
+  background-clip: text;
+  color: transparent;
+}
+
+.brit-word-art-orange {
+  background: linear-gradient(to right, #c55a11, #e8a444, #e8c749);
+  background-clip: text;
+  color: transparent;
+}
+
+.brit-word-art-green {
+  background: linear-gradient(to right, #375623, #70ad47, #a9d18e);
+  background-clip: text;
+  color: transparent;
+}
+
+.brit-word-art-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px #1f4e79;
+  font-weight: 900;
+}
+
+/* ---------- Layout tab ---------- */
+
+/* Column & section break markers (Word-style visible markers) */
+.brit-layout-break {
+  border-top: 2px dashed #c9c9c9;
+  border-bottom: 2px dashed #c9c9c9;
+  text-align: center;
+  font-size: 12px;
+  color: #a8a8a8;
+  background: #fafafa;
+  padding: 4px 0;
+  margin: 10px 0;
+  user-select: none;
+  cursor: default;
+}
+
+/* A column break inside a multicolumn page forces the next content to the
+   following column. */
+.brit-cols-two .brit-layout-break[data-kind="column"],
+.brit-cols-three .brit-layout-break[data-kind="column"],
+.brit-cols-left .brit-layout-break[data-kind="column"],
+.brit-cols-right .brit-layout-break[data-kind="column"] {
+  break-before: column;
+  border-top: none;
+  border-bottom: none;
+  background: transparent;
+  color: #8aa06a;
+  font-size: 11px;
+  padding: 2px 0;
+}
+
+/* Newspaper-style columns applied to the page's editable content */
+.brit-cols-two .brit-content,
+.brit-cols-left .brit-content,
+.brit-cols-right .brit-content {
+  column-count: 2;
+  column-gap: 32px;
+}
+
+.brit-cols-three .brit-content {
+  column-count: 3;
+  column-gap: 24px;
+}
+
+/* Continuous line numbers — one number per paragraph, in the left margin */
+.brit-line-numbers .brit-content {
+  counter-reset: britline;
+}
+
+.brit-line-numbers .brit-content p::before {
+  counter-increment: britline;
+  content: counter(britline);
+  float: left;
+  width: 1.5em;
+  margin-left: -2em;
+  margin-right: 0.5em;
+  text-align: right;
+  font-size: 11px;
+  line-height: inherit;
+  color: #a3a3a3;
+}
+
+/* Word-style automatic hyphenation */
+.brit-hyphens .brit-content p {
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}
+
+/* "Suppress for Current Paragraph" line-number opt-out */
+.brit-line-numbers .brit-content p.brit-no-linenum::before {
+  content: none;
+  counter-increment: none;
+}
+
+/* ---------- Review tab ---------- */
+
+/* Spelling wavy underline */
+.brit-content span.brit-spell-error {
+  text-decoration-line: underline;
+  text-decoration-style: wavy;
+  text-decoration-color: #d93025;
+  text-decoration-thickness: 1.3px;
+  text-underline-position: under;
+  text-decoration-skip-ink: none;
+}
+
+/* Tracked insertion (green) / tracked deletion (red) */
+.brit-content span.brit-track-insert {
+  background: rgba(46, 160, 67, 0.16);
+  text-decoration: underline;
+  text-decoration-color: #2ea043;
+  text-underline-offset: 2px;
+}
+
+.brit-content span.brit-track-delete {
+  background: rgba(217, 48, 37, 0.14);
+  text-decoration: line-through;
+  text-decoration-color: #d93025;
+  color: #a3140d;
+}
+
+/* Comment anchor highlight */
+.brit-content span.brit-comment {
+  background: #ffe766;
+  box-shadow: 0 0 0 2px rgba(255, 231, 102, 0.55);
+  border-radius: 2px;
+}
+
+/* Show Markup → No Markup (hide formatting of insertions) */
+.brit-markup-hidden .brit-content span.brit-track-insert {
+  background: transparent;
+  text-decoration: none;
+}
+.brit-markup-hidden .brit-content span.brit-track-delete {
+  background: transparent;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Show Markup → Original (keep deletions visible, hide insertions) */
+.brit-markup-original .brit-content span.brit-track-insert {
+  background: transparent;
+  text-decoration: none;
+}
+.brit-markup-original .brit-content span.brit-track-delete {
+  background: transparent;
+}
+
+/* Show Comments off — dim comment highlights */
+.brit-comments-off .brit-content span.brit-comment {
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+/* ---------- Draw tab ---------- */
+
+/* The page surface stays tall so InkCanvas overlays it fully */
+.brit-page {
+  position: relative;
+}
+
+/* ---------- View tab ---------- */
+
+/* Draft layout: no page shadow, margins become a plain centered sheet */
+.brit-draft-layout .brit-content {
+  min-height: 24in;
+}
+
+.brit-draft-layout {
+  background: #ffffff;
+}
+
+/* Web layout: continuous sheet with breathing room */
+.brit-web-layout .brit-content {
+  min-height: auto;
+}
+
+/* Gridlines overlay for the page */
+.brit-gridlines .brit-content {
+  background-image:
+    radial-gradient(circle, rgba(180, 190, 205, 0.28) 1px, transparent 1px),
+    linear-gradient(rgba(180, 190, 205, 0.16) 1px, transparent 1px);
+  background-size: 20px 20px, 20px 20px;
+  background-position: 0 0;
+}
+
+/* ---------- References tab ---------- */
+
+/* Footnote / endnote markers render as Word-style superscripts */
+.brit-content span.brit-footnote,
+.brit-content span.brit-endnote {
+  vertical-align: super;
+  font-size: 8px;
+  line-height: 0;
+  font-weight: 600;
+  color: #4472c4;
+  cursor: pointer;
+  user-select: none;
+  padding: 0 1px;
+}
+.brit-content span.brit-endnote {
+  color: #7030a0;
+}
+
+/* Citation markers */
+.brit-content span.brit-citation {
+  color: #1e4a80;
+  font-size: 10.5px;
+  font-style: italic;
+  padding: 0 1px;
+  cursor: pointer;
+  background: rgba(68, 114, 196, 0.08);
+  border-radius: 2px;
+}
+
+/* Bibliography + index block styling */
+.brit-content .brit-bibliography h3,
+.brit-content .brit-index-block h3 {
+  border-bottom: 1px solid #cfcfcf;
+  padding-bottom: 2px;
+  margin-bottom: 8px;
+}
+
+/* ---------- Mailings tab ---------- */
+
+/* Merge field tokens highlighted inside the document */
+.brit-mail-highlight {
+  background: rgba(255, 231, 102, 0.35);
+  padding: 0 2px;
+  border-radius: 2px;
+}
