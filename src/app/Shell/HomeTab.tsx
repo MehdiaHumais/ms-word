@@ -35,7 +35,7 @@ import {
   IconUnderline,
 } from "./icons";
 
-const FONTS = [
+export const FONTS = [
   "Arial",
   "Calibri",
   "Cambria",
@@ -48,7 +48,7 @@ const FONTS = [
   "Verdana",
 ];
 
-const FONT_SIZES = [8, 9, 10, 11, 12, 14, 16, 18, 20, 24, 28, 32, 36, 48, 60, 72, 96];
+export const FONT_SIZES = [8, 9, 10, 11, 12, 14, 16, 18, 20, 24, 28, 32, 36, 48, 60, 72, 96];
 
 const LINE_HEIGHTS = [
   { value: "default", label: "1.0" },

@@ -1,8 +1,9 @@
 import { EditorContent } from "@tiptap/react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type MouseEvent } from "react";
 import { useEditorContext } from "./EditorContext";
 import { useAppStore, PAGE_SIZES } from "../../stores/appStore";
 import { getTheme, themeVars } from "../../stores/themes";
+import { EditorContextMenu } from "../Shell/EditorContextMenu";
 import { FindReplacePanel } from "../Shell/FindReplacePanel";
 import { ReviewingPane } from "../Shell/ReviewingPane";
 import { ReviewDock } from "../Shell/ReviewDock";
@@ -190,6 +191,12 @@ export function WordEditor() {
 
   const locked = final || restrictReadOnly || viewMode === "read";
 
+  const [ctxMenu, setCtxMenu] = useState<null | { x: number; y: number }>(null);
+  const openContextMenu = (e: MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setCtxMenu({ x: e.clientX, y: e.clientY });
+  };
+
   useEffect(() => {
     if (editor) editor.setEditable(!locked);
   }, [editor, locked]);
@@ -250,7 +257,7 @@ export function WordEditor() {
           background: viewMode === "draft" || viewMode === "web" ? pageColor || "#ffffff" : undefined,
         }}
       >
-        <div className="relative">
+        <div className="relative" onContextMenu={openContextMenu}>
           <EditorContent editor={editor} />
           {(showInk || (viewMode === "print" && showInk)) && <InkCanvas />}
         </div>
@@ -316,6 +323,9 @@ export function WordEditor() {
       {showNavPane && <NavPane />}
       {outlineActive && viewMode === "outline" && <OutlinePane />}
       <div className="min-w-0 flex-1">{body}</div>
+      {ctxMenu && (
+        <EditorContextMenu x={ctxMenu.x} y={ctxMenu.y} onClose={() => setCtxMenu(null)} />
+      )}
     </div>
   );
 }
