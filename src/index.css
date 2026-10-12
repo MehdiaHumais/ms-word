@@ -12,7 +12,7 @@ body,
 /* ---------- Editor content (Word-like page typography) ---------- */
 
 .brit-content {
-  font-family: Calibri, "Segoe UI", sans-serif;
+  font-family: var(--brit-body-font, Calibri, "Segoe UI", sans-serif);
   color: #111;
   caret-color: #111;
 }
@@ -26,21 +26,24 @@ body,
   font-size: 2em;
   margin: 0.67em 0 0.4em;
   font-weight: 600;
-  color: #1f3355;
+  font-family: var(--brit-heading-font, inherit);
+  color: var(--brit-heading-color, #1f3355);
 }
 
 .brit-content h2 {
   font-size: 1.5em;
   margin: 0.83em 0 0.4em;
   font-weight: 600;
-  color: #1f3355;
+  font-family: var(--brit-heading-font, inherit);
+  color: var(--brit-heading-color, #1f3355);
 }
 
 .brit-content h3 {
   font-size: 1.25em;
   margin: 1em 0 0.4em;
   font-weight: 600;
-  color: #1f3355;
+  font-family: var(--brit-heading-font, inherit);
+  color: var(--brit-heading-color, #1f3355);
 }
 
 .brit-content ul,
@@ -105,7 +108,7 @@ body,
 }
 
 .brit-content a {
-  color: #0563c1;
+  color: var(--brit-link-color, #0563c1);
   text-decoration: underline;
   cursor: pointer;
 }

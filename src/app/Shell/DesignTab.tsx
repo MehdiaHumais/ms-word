@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useEditorContext } from "../Editor/EditorContext";
 import { useAppStore } from "../../stores/appStore";
+import { THEMES, getTheme, type ThemeDef } from "../../stores/themes";
 import { Group, RvCell, Popover, MenuSection, MenuItem, Modal } from "./tabKit";
 import {
   IconTheme,
@@ -13,14 +14,6 @@ import {
   IconPageBorder,
   IconBorderLine,
 } from "./icons";
-
-const THEMES = [
-  { id: "office", name: "Office", colors: ["#4472c4", "#ed7d31", "#a5a5a5", "#ffc000", "#5b9bd5", "#70ad47"], fonts: ["Calibri", "Calibri Light"] },
-  { id: "gallery", name: "Gallery", colors: ["#7030a0", "#c00000", "#2e75b6", "#548235", "#bf9000", "#7030a0"], fonts: ["Georgia", "Verdana"] },
-  { id: "contemporary", name: "Contemporary", colors: ["#ed6c47", "#4a6572", "#c9a66b", "#8a5a44", "#727e7e", "#2e7d8c"], fonts: ["Segoe UI", "Segoe UI"] },
-  { id: "paper", name: "Paper", colors: ["#7f7f7f", "#2e2e2e", "#a62b3c", "#4e7c8a", "#b09b67", "#6b8e5a"], fonts: ["Palatino", "Garamond"] },
-  { id: "doctor", name: "Doctor", colors: ["#4472c4", "#c55a11", "#9ec5e8", "#d9d9d9", "#ed7d31", "#70ad47"], fonts: ["Arial", "Arial Narrow"] },
-];
 
 const PAGE_COLORS = ["#ffffff", "#fbf6e9", "#eef4f0", "#f2f5fb", "#fdeeef", "#faf3e6"];
 
@@ -48,14 +41,20 @@ export function DesignTab() {
   const [menu, setMenu] = useState<null | string>(null);
   const [showWatermark, setShowWatermark] = useState(false);
 
-  const applyTheme = (t: (typeof THEMES)[number]) => {
+  const theme = getTheme(themeId);
+
+  const applyTheme = (t: ThemeDef) => {
     setThemeId(t.id);
-    if (editor) {
-      editor.chain().focus().command(({ tr }) => {
-        tr.setMeta("britTheme", t.id);
-        return true;
-      }).run();
-    }
+    setMenu(null);
+  };
+
+  const applyTextColor = (hex: string) => {
+    editor?.chain().focus().setColor(hex).run();
+    setMenu(null);
+  };
+
+  const applyFontFamily = (family: string) => {
+    editor?.chain().focus().setFontFamily(family).run();
     setMenu(null);
   };
 
@@ -174,7 +173,8 @@ export function DesignTab() {
       </Group>
 
       {/* Theme gallery popover */}
-      <Popover open={menu === "themes" || menu === "colors" || menu === "fonts"} onClose={() => setMenu(null)} align="left-0">
+      <Popover open={menu === "themes"} onClose={() => setMenu(null)} align="left-0">
+        <MenuSection title="Themes" />
         <div className="grid w-[360px] grid-cols-3 gap-1 p-1">
           {THEMES.map((t) => (
             <button
@@ -190,10 +190,59 @@ export function DesignTab() {
                 ))}
               </span>
               <span className="mt-1 block text-[10px] font-medium text-[#333]">{t.name}</span>
-              <span className="block text-[8px] text-[#8a8a8a]">{`${t.fonts[0]} / ${t.fonts[1]}`}</span>
+              <span className="block text-[8px] text-[#8a8a8a]">{`${t.headingFont} / ${t.bodyFont}`}</span>
             </button>
           ))}
         </div>
+      </Popover>
+
+      {/* Theme colours popover — the active theme's palette */}
+      <Popover open={menu === "colors"} onClose={() => setMenu(null)} align="left-0">
+        <MenuSection title={`Colors — ${theme.name}`} />
+        <div className="grid w-[210px] grid-cols-3 gap-1 p-1">
+          {theme.colors.map((c, i) => (
+            <button
+              key={`${c}-${i}`}
+              title={`Accent ${i + 1} ${c}`}
+              aria-label={`Accent ${i + 1} ${c}`}
+              data-testid={`theme-color-${i + 1}`}
+              onClick={() => applyTextColor(c)}
+              className="flex h-[26px] w-full cursor-pointer items-end justify-start rounded-sm border border-[#d0d0d0] p-0.5"
+              style={{ background: c }}
+            >
+              <span className="rounded-[2px] bg-white/80 px-1 text-[8px] leading-tight text-[#333]">{`A${i + 1}`}</span>
+            </button>
+          ))}
+        </div>
+        <p className="px-1 pb-1 text-[9px] text-[#8a8a8a]">Click a swatch to apply it to the selected text.</p>
+      </Popover>
+
+      {/* Theme fonts popover — the active theme's font pair */}
+      <Popover open={menu === "fonts"} onClose={() => setMenu(null)} align="left-0">
+        <MenuSection title={`Fonts — ${theme.name}`} />
+        <div className="flex w-[230px] flex-col p-0.5">
+          <button
+            data-testid="theme-font-heading"
+            onClick={() => applyFontFamily(theme.headingFont)}
+            className="flex cursor-pointer items-center justify-between gap-3 rounded px-2 py-1.5 text-left hover:bg-[#eaf1fa]"
+          >
+            <span className="text-[13px] text-[#333]" style={{ fontFamily: theme.headingFont }}>
+              {theme.headingFont}
+            </span>
+            <span className="text-[9px] uppercase tracking-wide text-[#8a8a8a]">Heading</span>
+          </button>
+          <button
+            data-testid="theme-font-body"
+            onClick={() => applyFontFamily(theme.bodyFont)}
+            className="flex cursor-pointer items-center justify-between gap-3 rounded px-2 py-1.5 text-left hover:bg-[#eaf1fa]"
+          >
+            <span className="text-[13px] text-[#333]" style={{ fontFamily: theme.bodyFont }}>
+              {theme.bodyFont}
+            </span>
+            <span className="text-[9px] uppercase tracking-wide text-[#8a8a8a]">Body</span>
+          </button>
+        </div>
+        <p className="px-2 pb-1 text-[9px] text-[#8a8a8a]">Click a font to apply it to the selected text.</p>
       </Popover>
 
       {/* Page color popover */}

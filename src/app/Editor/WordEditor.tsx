@@ -2,6 +2,7 @@ import { EditorContent } from "@tiptap/react";
 import { useEffect, useMemo, useState } from "react";
 import { useEditorContext } from "./EditorContext";
 import { useAppStore, PAGE_SIZES } from "../../stores/appStore";
+import { getTheme, themeVars } from "../../stores/themes";
 import { FindReplacePanel } from "../Shell/FindReplacePanel";
 import { ReviewingPane } from "../Shell/ReviewingPane";
 import { ReviewDock } from "../Shell/ReviewDock";
@@ -181,8 +182,11 @@ export function WordEditor() {
   const pageColor = useAppStore((s) => s.pageColor);
   const watermark = useAppStore((s) => s.watermark);
   const pageBorder = useAppStore((s) => s.pageBorder);
+  const themeId = useAppStore((s) => s.themeId);
   const outlineActive = useAppStore((s) => s.outlineActive);
   const showInk = useAppStore((s) => s.showInk);
+
+  const theme = getTheme(themeId);
 
   const locked = final || restrictReadOnly || viewMode === "read";
 
@@ -236,6 +240,7 @@ export function WordEditor() {
       <div
         className={skinClasses}
         style={{
+          ...themeVars(theme),
           minHeight: isPaged
             ? `calc(${pageHeight}in * ${zoom / 100})`
             : undefined,
